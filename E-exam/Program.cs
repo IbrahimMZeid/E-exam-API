@@ -1,6 +1,7 @@
 
 using E_exam.MapperConfiq;
 using E_exam.Models;
+using E_exam.UnitOfWorks;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_exam
@@ -17,8 +18,8 @@ namespace E_exam
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
-            builder.Services.AddDbContext<E_examDBContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+            builder.Services.AddDbContext<E_examDBContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+            builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddAutoMapper(typeof(MapperConfig));
             builder.Services.AddCors(options =>
             {

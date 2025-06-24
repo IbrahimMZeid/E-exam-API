@@ -6,11 +6,9 @@ namespace E_exam.Models
     {
         [Key]
         public int Id { get; set; }
-
         [Required]
         [StringLength(100)]
         public string Name { get; set; } = string.Empty;
-
-        public List<Exam>? Exams { get; set; }
+        public virtual ICollection<Exam> Exams { get; set; } = new List<Exam>();
     }
 }

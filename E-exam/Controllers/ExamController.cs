@@ -1,4 +1,5 @@
 ﻿using E_exam.Models;
+using E_exam.UnitOfWorks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,15 +9,17 @@ namespace E_exam.Controllers
     [ApiController]
     public class ExamController : ControllerBase
     {
-        public E_examDBContext Db { get; }
-        public ExamController(E_examDBContext db)
+        public ExamController(UnitOfWork unit)
         {
-            Db = db;
+            Unit = unit;
         }
+
+        public UnitOfWork Unit { get; }
+
         [HttpGet]
         public IActionResult getExams()
         {
-            var exams = Db.Exams.ToList();
+            var exams = Unit.ExamRepo.GetAll();
             return Ok(exams);
         }
     }

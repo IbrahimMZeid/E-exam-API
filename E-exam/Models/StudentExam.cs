@@ -8,14 +8,13 @@ namespace E_exam.Models
     public class StudentExam
     {
         [ForeignKey("Student")]
-        public string StudentId { get; set; }
-
-        public virtual Student Student { get; set; }
+        public int StudentId { get; set; }
+        public virtual Student? Student { get; set; }
         [ForeignKey("Exam")]
         public int ExamId { get; set; }
         public virtual Exam? Exam { get; set; }
         public int Score { get; set; }
         public bool Passed { get; set; }
-        public List<StudentAnswers> StudentAnswers { get; set; }
+        public virtual ICollection<StudentAnswers> StudentAnswers { get; set; } = new List<StudentAnswers>();
     }
 }
