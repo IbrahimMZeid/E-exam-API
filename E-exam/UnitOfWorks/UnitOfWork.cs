@@ -13,6 +13,7 @@ namespace E_exam.UnitOfWorks
         private StudentExamRepository studentExamRepo;
         private SubjectRepository subjectRepo;
         private OptionRepository optionRepo;
+        private ExamQuestionRepository examQuestionRepo;
 
         public UnitOfWork(E_examDBContext db)
         {
@@ -106,9 +107,21 @@ namespace E_exam.UnitOfWorks
                 return this.optionRepo;
             }
         }
-        public void Save()
+        public ExamQuestionRepository ExamQuestionRepo
         {
-            db.SaveChanges();
+            get
+            {
+                if (examQuestionRepo == null)
+                {
+                    examQuestionRepo = new ExamQuestionRepository(db);
+                }
+                return this.examQuestionRepo;
+            }
         }
+        public int Save()
+        {
+            return db.SaveChanges();
+        }
+
     }
 }

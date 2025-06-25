@@ -20,8 +20,9 @@ namespace E_exam.Models
         [ForeignKey("Teacher")]
         public int TeacherId { get; set; }
         public virtual Teacher Teacher { get; set; } = null!;
-        public virtual ICollection<Question>? Questions { get; set; } = new List<Question>();
         public virtual ICollection<StudentExam>? StudentExams { get; set; } = new List<StudentExam>();
+        public virtual ICollection<ExamQuestion> ExamQuestions { get; set; } = new List<ExamQuestion>();
+
 
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace E_exam.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace E_exam.Models
 {
     public class StudentAnswers
     {
@@ -7,7 +9,10 @@
         public virtual StudentExam? StudentExam { get; set; }
         public int QuestionID { get; set; }
         public virtual Question? Question { get; set; }
-        public int AnswerText { get; set; }
+        [ForeignKey("SelectedOption")]
+        public int SelectedOptionId { get; set; }
+        public virtual Option? SelectedOption { get; set; }
+
         public bool IsCorrect { get; set; }
         public int Mark { get; set; }
     }
