@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using E_exam.DTOs.ExamDTOs;
 using E_exam.DTOs.OptionDTOs;
 using E_exam.DTOs.QuestionDTOs;
 using E_exam.Models;
@@ -9,6 +10,13 @@ namespace E_exam.MapperConfiq
     {
         public MapperConfig()
         {
+            ///////////// Exam
+            // Exam <==> ExamListDTM
+            CreateMap<Exam,ExamListDTO>()
+                .ForMember(dest => dest.Subject, opt => opt.MapFrom(exam => exam.Subject.Name));
+            // Exam <==> AddExamDTM
+            CreateMap<Exam, ExamFormDTO>().ReverseMap();
+
             // Question -> QuestionDTO
             CreateMap<Question, QuestionDTO>()
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))

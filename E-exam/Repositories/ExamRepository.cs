@@ -8,11 +8,11 @@ namespace E_exam.Repositories
         public ExamRepository(E_examDBContext db) : base(db)
         {
         }
-        public ICollection<Exam> GetAll()
+        public override ICollection<Exam> GetAll()
         {
             return Db.Exams.Include(e => e.Subject).ToList();
         }
-        public Exam? GetById(int id)
+        public override Exam? GetById(int id)
         {
             return Db.Exams
                 .Include(e => e.Subject)

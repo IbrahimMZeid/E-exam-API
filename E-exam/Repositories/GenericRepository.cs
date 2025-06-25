@@ -9,23 +9,23 @@ namespace E_exam.Repositories
         {
             Db = db;
         }
-        public ICollection<TEntity> GetAll()
+        public virtual ICollection<TEntity> GetAll()
         {
             return Db.Set<TEntity>().ToList();
         }
-        public TEntity? GetById(int id)
+        public virtual TEntity? GetById(int id)
         {
             return Db.Set<TEntity>().Find(id);
         }
-        public void Add(TEntity entity)
+        public virtual void Add(TEntity entity)
         {
             Db.Set<TEntity>().Add(entity);
         }
-        public void Edit(TEntity entity)
+        public virtual void Edit(TEntity entity)
         {
             Db.Entry(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
         }
-        public void Delete(int id)
+        public virtual void Delete(int id)
         {
             TEntity? t = GetById(id);
             if (t != null)
