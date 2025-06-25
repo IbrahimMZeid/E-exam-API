@@ -61,7 +61,14 @@ namespace E_exam.Controllers
 
             if (dto.Type == QuestionType.TrueFalse && dto.Options.Count != 2)
                 return BadRequest(new { message = "True/False questions must have exactly 2 options." });
+            if (dto.Type == QuestionType.MultipleChoice)
+            {
+                if (dto.Options.Count <= 2 || dto.Options.Count > 4)
+                    return BadRequest(new { message = "MultipleChoice questions must have exactly 3 or 4 options." });
 
+                if (dto.Options.Count(o => o.IsCorrect) != 1)
+                    return BadRequest(new { message = "MultipleChoice questions must have exactly 1 correct option." });
+            }
             var question = Mapper.Map<Question>(dto);
             UnitOfWork.QuestionRepo.Add(question);
             UnitOfWork.Save();
@@ -74,6 +81,19 @@ namespace E_exam.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+           
+            if (dto.Type == QuestionType.TrueFalse && dto.Options.Count != 2)
+                return BadRequest(new { message = "True/False questions must have exactly 2 options." });
+
+            if (dto.Type == QuestionType.MultipleChoice)
+            {
+                if (dto.Options.Count < 3 || dto.Options.Count > 4)
+                    return BadRequest(new { message = "MultipleChoice questions must have exactly 3 or 4 options." });
+
+                if (dto.Options.Count(o => o.IsCorrect) != 1)
+                    return BadRequest(new { message = "MultipleChoice questions must have exactly 1 correct option." });
+            }
 
             var question = UnitOfWork.QuestionRepo.GetById(id);
             if (question == null)
@@ -104,6 +124,7 @@ namespace E_exam.Controllers
 
             return Ok(new { message = "Question updated successfully." });
         }
+
 
 
         [HttpDelete("{id}")]
