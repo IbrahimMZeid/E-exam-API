@@ -14,6 +14,7 @@ namespace E_exam.Models
         public DbSet<StudentExam> StudentExams { get; set; }
         public DbSet<StudentAnswers> StudentAnswers { get; set; }
         public DbSet<Exam> Exams { get; set; }
+        public DbSet<ExamQuestion> ExamQuestion { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Option> Options { get; set; }
         public DbSet<Subject> Subjects { get; set; }
