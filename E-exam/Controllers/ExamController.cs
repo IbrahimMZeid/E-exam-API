@@ -22,5 +22,42 @@ namespace E_exam.Controllers
             var exams = Unit.ExamRepo.GetAll();
             return Ok(exams);
         }
+        [HttpGet]
+        public IActionResult getExam(int id)
+        {
+            var exam = Unit.ExamRepo.GetById(id);
+            if (exam == null)
+                return NotFound();
+            return Ok(exam);
+        }
+        [HttpPost]
+        public IActionResult Add(Exam exam)
+        {
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+            Unit.ExamRepo.Add(exam);
+            Unit.Save();
+            return Ok();
+        }
+        [HttpPut]
+        public IActionResult Edit(Exam exam)
+        {
+            if(!ModelState.IsValid) 
+                return BadRequest(ModelState);
+            Unit.ExamRepo.Edit(exam); 
+            Unit.Save();
+            return Ok();
+        }
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var exam = Unit.ExamRepo.GetById(id);
+            if (exam == null)
+                return NotFound();
+            Unit.ExamRepo.Delete(id);
+            Unit.Save();
+            return Ok();
+        }
     }
 }

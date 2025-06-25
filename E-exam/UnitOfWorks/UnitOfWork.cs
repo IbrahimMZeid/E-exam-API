@@ -106,5 +106,9 @@ namespace E_exam.UnitOfWorks
                 return this.optionRepo;
             }
         }
+        public void Save()
+        {
+            db.SaveChanges();
+        }
     }
 }
