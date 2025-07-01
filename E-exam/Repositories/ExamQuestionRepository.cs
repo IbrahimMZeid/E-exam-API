@@ -11,7 +11,22 @@ namespace E_exam.Repositories
         {
             return Db.ExamQuestion.Where(eq => eq.ExamId == id);
         }
-        public void RemoveRange(IQueryable<ExamQuestion> list)
+
+        public List<ExamQuestion> GetByExamId(int examId)
+        {
+            return Db.ExamQuestion.Where(eq => eq.ExamId.Equals(examId)).ToList();
+        }
+        public void AddRange(int examId, ICollection<int> questionIds)
+        {
+            List<ExamQuestion> examQuestions = questionIds
+                .Select(questionId => new ExamQuestion
+                {
+                    ExamId = examId,
+                    QuestionId = questionId
+                }).ToList();
+            Db.AddRange(examQuestions);
+        }
+        public void RemoveRange(ICollection<ExamQuestion> list)
         {
             Db.RemoveRange(list);
         }

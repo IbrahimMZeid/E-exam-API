@@ -43,6 +43,7 @@ namespace E_exam.Controllers
             }
             var exam = Mapper.Map<Exam>(examFromReq);
             Unit.ExamRepo.Add(exam);
+            Unit.ExamQuestionRepo.AddRange(exam.Id, examFromReq.ExamQuestions);
             Unit.Save();
             return Ok(new { message = "Exam Added Successfully." });
         }
@@ -54,8 +55,31 @@ namespace E_exam.Controllers
             var oldExam = Unit.ExamRepo.GetById(id);
             if (oldExam == null)
                 return NotFound(new { message = "Exam not found" });
-            var exam = Mapper.Map<Exam>(examFromReq);
-            Unit.ExamRepo.Edit(exam);
+            //var exam = Mapper.Map<Exam>(examFromReq);
+            //Unit.ExamRepo.Edit(exam);
+            //Unit.Save();
+            if (examFromReq.ExamQuestions != null && examFromReq.ExamQuestions.Any())
+            {
+                var currentQuestions = Unit.ExamQuestionRepo.GetByExamId(id);
+                // Get new questions to add it
+                var questionsToAdd = examFromReq.ExamQuestions.Except(currentQuestions.Select(q => q.QuestionId)).ToList();
+                // Get old questions that are not in examFromReq to remove it
+                var questionsToRemove = currentQuestions.Except(examFromReq.ExamQuestions.Select(questionId => new ExamQuestion
+                {
+                    ExamId = id,
+                    QuestionId = questionId
+                })).ToList();
+                // Add new questions
+                if (questionsToAdd.Any())
+                {
+                    Unit.ExamQuestionRepo.AddRange(id, questionsToAdd);
+                }
+                // Remove old questions
+                if (questionsToRemove.Any())
+                {
+                    Unit.ExamQuestionRepo.RemoveRange(questionsToRemove);
+                }
+            }
             Unit.Save();
             return Ok(new { message = "Exam Updateed Successfully." });
         }
@@ -65,10 +89,11 @@ namespace E_exam.Controllers
             var exam = Unit.ExamRepo.GetById(id);
             if (exam == null)
                 return NotFound(new { message = "Exam not found" });
-            var examQuestions = Unit.ExamQuestionRepo.getExamQuestions(id);
-            if (examQuestions != null)
-                Unit.ExamQuestionRepo.RemoveRange(examQuestions);
-            Unit.ExamRepo.Delete(id);
+            //var examQuestions = Unit.ExamQuestionRepo.getExamQuestions(id);
+            //if (examQuestions != null)
+            //    Unit.ExamQuestionRepo.RemoveRange(examQuestions);
+            exam.IsPublished = false;
+            //Unit.ExamRepo.Delete(id);
             Unit.Save();
             return Ok(new { message = "Exam Deleted Successfully" });
         }
