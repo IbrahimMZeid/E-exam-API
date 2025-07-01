@@ -1,14 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_exam.Models
 {
+    [PrimaryKey(nameof(StudentId),nameof(ExamId),nameof(SelectedOptionId))]
     public class StudentAnswers
     {
-        public int Id { get; set; }
-        public int StudentExamId { get; set; }
-        public virtual StudentExam? StudentExam { get; set; }
-        public int QuestionID { get; set; }
-        public virtual Question? Question { get; set; }
+        public int StudentId { get; set; }
+        public Student? Student { get; set; }
+        public int ExamId { get; set; }
+        public Exam? Exam { get; set; }
         [ForeignKey("SelectedOption")]
         public int SelectedOptionId { get; set; }
         public virtual Option? SelectedOption { get; set; }

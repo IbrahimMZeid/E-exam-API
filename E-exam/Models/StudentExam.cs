@@ -15,6 +15,5 @@ namespace E_exam.Models
         public virtual Exam? Exam { get; set; }
         public int Score { get; set; }
         public bool Passed { get; set; }
-        public virtual ICollection<StudentAnswers> StudentAnswers { get; set; } = new List<StudentAnswers>();
     }
 }

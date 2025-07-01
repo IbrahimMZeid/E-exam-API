@@ -22,7 +22,7 @@ namespace E_exam.Models
         public virtual Teacher Teacher { get; set; } = null!;
         public virtual ICollection<StudentExam>? StudentExams { get; set; } = new List<StudentExam>();
         public virtual ICollection<ExamQuestion> ExamQuestions { get; set; } = new List<ExamQuestion>();
-
+        public virtual ICollection<StudentAnswers> StudentAnswers{ get; set; } = new List<StudentAnswers>();
 
     }
 }

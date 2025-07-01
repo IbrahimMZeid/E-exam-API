@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_exam.Migrations
 {
     [DbContext(typeof(E_examDBContext))]
-    [Migration("20250624162954_models-init")]
-    partial class modelsinit
+    [Migration("20250701164321_modify_composite_primary_key")]
+    partial class modify_composite_primary_key
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -127,6 +127,21 @@ namespace E_exam.Migrations
                     b.ToTable("Exams");
                 });
 
+            modelBuilder.Entity("E_exam.Models.ExamQuestion", b =>
+                {
+                    b.Property<int>("ExamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ExamId", "QuestionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("ExamQuestion");
+                });
+
             modelBuilder.Entity("E_exam.Models.Option", b =>
                 {
                     b.Property<int>("Id")
@@ -137,9 +152,6 @@ namespace E_exam.Migrations
 
                     b.Property<bool>("IsCorrect")
                         .HasColumnType("bit");
-
-                    b.Property<int>("Mark")
-                        .HasColumnType("int");
 
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");
@@ -164,16 +176,13 @@ namespace E_exam.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Answer")
+                    b.Property<int>("Difficulty")
                         .HasColumnType("int");
-
-                    b.Property<int>("ExamId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsTrueOrFalse")
-                        .HasColumnType("bit");
 
                     b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubjectId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -181,9 +190,12 @@ namespace E_exam.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ExamId");
+                    b.HasIndex("SubjectId");
 
                     b.ToTable("Questions");
                 });
@@ -224,13 +236,13 @@ namespace E_exam.Migrations
 
             modelBuilder.Entity("E_exam.Models.StudentAnswers", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("ExamId")
+                        .HasColumnType("int");
 
-                    b.Property<int>("AnswerText")
+                    b.Property<int>("SelectedOptionId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsCorrect")
@@ -239,23 +251,16 @@ namespace E_exam.Migrations
                     b.Property<int>("Mark")
                         .HasColumnType("int");
 
-                    b.Property<int>("QuestionID")
+                    b.Property<int?>("QuestionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StudentExamExamId")
-                        .HasColumnType("int");
+                    b.HasKey("StudentId", "ExamId", "SelectedOptionId");
 
-                    b.Property<int>("StudentExamId")
-                        .HasColumnType("int");
+                    b.HasIndex("ExamId");
 
-                    b.Property<int?>("StudentExamStudentId")
-                        .HasColumnType("int");
+                    b.HasIndex("QuestionId");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionID");
-
-                    b.HasIndex("StudentExamStudentId", "StudentExamExamId");
+                    b.HasIndex("SelectedOptionId");
 
                     b.ToTable("StudentAnswers");
                 });
@@ -468,13 +473,13 @@ namespace E_exam.Migrations
                     b.HasOne("E_exam.Models.Subject", "Subject")
                         .WithMany("Exams")
                         .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("E_exam.Models.Teacher", "Teacher")
                         .WithMany("Exams")
                         .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Subject");
@@ -482,12 +487,31 @@ namespace E_exam.Migrations
                     b.Navigation("Teacher");
                 });
 
+            modelBuilder.Entity("E_exam.Models.ExamQuestion", b =>
+                {
+                    b.HasOne("E_exam.Models.Exam", "Exam")
+                        .WithMany("ExamQuestions")
+                        .HasForeignKey("ExamId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("E_exam.Models.Question", "Question")
+                        .WithMany("ExamQuestions")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Exam");
+
+                    b.Navigation("Question");
+                });
+
             modelBuilder.Entity("E_exam.Models.Option", b =>
                 {
                     b.HasOne("E_exam.Models.Question", "Question")
                         .WithMany("Options")
                         .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Question");
@@ -495,13 +519,13 @@ namespace E_exam.Migrations
 
             modelBuilder.Entity("E_exam.Models.Question", b =>
                 {
-                    b.HasOne("E_exam.Models.Exam", "Exam")
+                    b.HasOne("E_exam.Models.Subject", "Subject")
                         .WithMany("Questions")
-                        .HasForeignKey("ExamId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Exam");
+                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("E_exam.Models.Student", b =>
@@ -517,19 +541,33 @@ namespace E_exam.Migrations
 
             modelBuilder.Entity("E_exam.Models.StudentAnswers", b =>
                 {
-                    b.HasOne("E_exam.Models.Question", "Question")
+                    b.HasOne("E_exam.Models.Exam", "Exam")
                         .WithMany("StudentAnswers")
-                        .HasForeignKey("QuestionID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ExamId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("E_exam.Models.StudentExam", "StudentExam")
+                    b.HasOne("E_exam.Models.Question", null)
                         .WithMany("StudentAnswers")
-                        .HasForeignKey("StudentExamStudentId", "StudentExamExamId");
+                        .HasForeignKey("QuestionId");
 
-                    b.Navigation("Question");
+                    b.HasOne("E_exam.Models.Option", "SelectedOption")
+                        .WithMany()
+                        .HasForeignKey("SelectedOptionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.Navigation("StudentExam");
+                    b.HasOne("E_exam.Models.Student", "Student")
+                        .WithMany("StudentAnswers")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Exam");
+
+                    b.Navigation("SelectedOption");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("E_exam.Models.StudentExam", b =>
@@ -537,13 +575,13 @@ namespace E_exam.Migrations
                     b.HasOne("E_exam.Models.Exam", "Exam")
                         .WithMany("StudentExams")
                         .HasForeignKey("ExamId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("E_exam.Models.Student", "Student")
                         .WithMany("StudentExams")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Exam");
@@ -622,13 +660,17 @@ namespace E_exam.Migrations
 
             modelBuilder.Entity("E_exam.Models.Exam", b =>
                 {
-                    b.Navigation("Questions");
+                    b.Navigation("ExamQuestions");
+
+                    b.Navigation("StudentAnswers");
 
                     b.Navigation("StudentExams");
                 });
 
             modelBuilder.Entity("E_exam.Models.Question", b =>
                 {
+                    b.Navigation("ExamQuestions");
+
                     b.Navigation("Options");
 
                     b.Navigation("StudentAnswers");
@@ -636,17 +678,16 @@ namespace E_exam.Migrations
 
             modelBuilder.Entity("E_exam.Models.Student", b =>
                 {
-                    b.Navigation("StudentExams");
-                });
-
-            modelBuilder.Entity("E_exam.Models.StudentExam", b =>
-                {
                     b.Navigation("StudentAnswers");
+
+                    b.Navigation("StudentExams");
                 });
 
             modelBuilder.Entity("E_exam.Models.Subject", b =>
                 {
                     b.Navigation("Exams");
+
+                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("E_exam.Models.Teacher", b =>

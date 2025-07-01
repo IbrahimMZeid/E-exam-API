@@ -24,5 +24,6 @@ namespace E_exam.Models
         public DateTime? DateOfBirth { get; set; } 
 
         public virtual ICollection<StudentExam>? StudentExams { get; set; } = new List<StudentExam>();
+        public virtual ICollection<StudentAnswers> StudentAnswers { get; set; } = new List<StudentAnswers>();
     }
 }

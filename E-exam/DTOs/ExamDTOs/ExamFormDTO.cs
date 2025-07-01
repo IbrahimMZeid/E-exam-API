@@ -16,6 +16,6 @@ namespace E_exam.DTOs.ExamDTOs
         public bool IsPublished { get; set; } = false;
         public int SubjectId { get; set; }
         public int TeacherId { get; set; }
-        public virtual ICollection<ExamQuestion> ExamQuestions { get; set; } = new List<ExamQuestion>();
+        public virtual ICollection<int> ExamQuestions { get; set; } = new List<int>();
     }
 }

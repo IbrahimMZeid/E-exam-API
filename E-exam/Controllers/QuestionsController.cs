@@ -114,7 +114,7 @@ namespace E_exam.Controllers
                 {
                     Title = optionDto.Title,
                     IsCorrect = optionDto.IsCorrect,
-                    Mark = optionDto.Mark,
+                    //Mark = optionDto.Mark,
                     QuestionId = question.Id
                 };
                 UnitOfWork.OptionRepo.Add(newOption);
