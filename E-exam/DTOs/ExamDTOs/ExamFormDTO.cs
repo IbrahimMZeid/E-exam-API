@@ -6,7 +6,7 @@ namespace E_exam.DTOs.ExamDTOs
 {
     public class ExamFormDTO
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         [MaxLength(200)]
         public string Name { get; set; } = string.Empty;
         [Required]

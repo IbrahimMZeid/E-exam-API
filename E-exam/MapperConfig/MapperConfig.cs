@@ -15,7 +15,8 @@ namespace E_exam.MapperConfiq
             CreateMap<Exam,ExamListDTO>()
                 .ForMember(dest => dest.Subject, opt => opt.MapFrom(exam => exam.Subject.Name));
             // Exam <==> AddExamDTM
-            CreateMap<Exam, ExamFormDTO>().ReverseMap();
+            CreateMap<Exam, ExamFormDTO>().ForMember(dest => dest.ExamQuestions,
+               opt => opt.Ignore());
 
             // Question -> QuestionDTO
             CreateMap<Question, QuestionDTO>()
@@ -28,7 +29,7 @@ namespace E_exam.MapperConfiq
 
             // CreateQuestionDTO -> Question
             CreateMap<CreateQuestionDTO, Question>()
-    .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options));
+                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options));
 
 
             // Option -> OptionDTO
