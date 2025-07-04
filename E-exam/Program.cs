@@ -1,7 +1,9 @@
 
 using E_exam.MapperConfiq;
 using E_exam.Models;
+using E_exam.Seeds;
 using E_exam.UnitOfWorks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_exam
@@ -18,7 +20,22 @@ namespace E_exam
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
-            builder.Services.AddDbContext<E_examDBContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+            builder.Services.AddDbContext<E_examDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+
+
+            //register identity services
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredUniqueChars = 0;
+            })
+            .AddEntityFrameworkStores<E_examDBContext>()
+            .AddDefaultTokenProviders();
+
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddAutoMapper(typeof(MapperConfig));
             builder.Services.AddCors(options =>
@@ -35,6 +52,13 @@ namespace E_exam
 
 
             var app = builder.Build();
+
+            // seed roles and users to datavbase
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                DbUsersInitializer.SeedRolesAndUsersAsync(services).GetAwaiter().GetResult();
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
