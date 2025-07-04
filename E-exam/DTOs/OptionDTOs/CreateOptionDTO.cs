@@ -8,6 +8,6 @@ namespace E_exam.DTOs.OptionDTOs
     {
         public string Title { get; set; } = string.Empty;
         public bool IsCorrect { get; set; }
-        public int Mark { get; set; }
+       //public int Mark { get; set; }
     }
 }
