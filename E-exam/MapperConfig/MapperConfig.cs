@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using E_exam.DTOs.ExamDTOs;
+using E_exam.DTOs.ExamQuestionDTO;
 using E_exam.DTOs.OptionDTOs;
 using E_exam.DTOs.QuestionDTOs;
 using E_exam.Models;
@@ -46,6 +47,9 @@ namespace E_exam.MapperConfiq
 
             // CreateOptionDTO -> Option
             CreateMap<CreateOptionDTO, Option>();
+
+            //ExamQuestion -> ExamQuestionDTO
+            CreateMap<ExamQuestion, ExamQuestionDto>();
         }
     }
 }

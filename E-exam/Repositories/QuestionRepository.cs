@@ -18,9 +18,10 @@ namespace E_exam.Repositories
         public ICollection<Question> GetAll()
         {
             return Db.Questions
-                .Include (q => q.Options)
+                .Include(q => q.Options)
                 .Include(q => q.Subject)
                 .ToList();
+        }
+
     }
-}
 }
