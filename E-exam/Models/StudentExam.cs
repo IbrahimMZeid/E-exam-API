@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_exam.Models
 {
+    //this model is the exam when student takes an exam
+    // it contains the score and whether the student passed or not
     [PrimaryKey(nameof(StudentId),nameof(ExamId))]
     public class StudentExam
     {

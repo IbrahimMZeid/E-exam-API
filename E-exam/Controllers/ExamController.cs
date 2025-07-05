@@ -31,7 +31,7 @@ namespace E_exam.Controllers
             var exam = Unit.ExamRepo.GetById(id);
             if (exam == null)
                 return NotFound();
-            return Ok(Mapper.Map<ExamListDTO>(exam));
+            return Ok(exam);
 
         }
         [HttpPost]

@@ -1,4 +1,5 @@
 ﻿using E_exam.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_exam.Repositories
 {
@@ -14,7 +15,10 @@ namespace E_exam.Repositories
 
         public List<ExamQuestion> GetByExamId(int examId)
         {
-            return Db.ExamQuestion.Where(eq => eq.ExamId.Equals(examId)).ToList();
+            return Db.ExamQuestion.Where(eq => eq.ExamId == examId)
+                .Include(eq => eq.Question)
+                .ThenInclude(eq => eq.Options)
+                .ToList();
         }
         public void AddRange(int examId, ICollection<int> questionIds)
         {
@@ -26,9 +30,13 @@ namespace E_exam.Repositories
                 }).ToList();
             Db.AddRange(examQuestions);
         }
-        public void RemoveRange(ICollection<ExamQuestion> list)
+        public void RemoveRange(int examId, ICollection<int> questionIds)
         {
-            Db.RemoveRange(list);
+            // Get the actual tracked entities to remove
+            var examQuestions = Db.ExamQuestion
+                .Where(eq => eq.ExamId == examId && questionIds.Contains(eq.QuestionId))
+                .ToList();
+            Db.RemoveRange(examQuestions);
         }
     }
 }
