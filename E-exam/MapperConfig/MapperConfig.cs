@@ -18,8 +18,17 @@ namespace E_exam.MapperConfiq
                 .ForMember(dest => dest.Subject, opt => opt.MapFrom(exam => exam.Subject.Name));
             // Exam <==> AddExamDTM
             CreateMap<Exam, ExamFormDTO>().ForMember(dest => dest.ExamQuestions,
-               opt => opt.Ignore());
-
+        opt => opt.MapFrom(src => src.ExamQuestions.Select(eq => eq.QuestionId).ToList()));
+            CreateMap<ExamFormDTO, Exam>()
+     .ForMember(dest => dest.ExamQuestions, opt => opt.Ignore())
+     .AfterMap((src, dest) =>
+     {
+         dest.ExamQuestions = src.ExamQuestions.Select(questionId => new ExamQuestion
+         {
+             QuestionId = questionId,
+             Exam = dest
+         }).ToList();
+     });
             // Question -> QuestionDTO
             CreateMap<Question, QuestionDTO>()
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))

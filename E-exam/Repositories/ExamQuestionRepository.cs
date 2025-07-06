@@ -15,10 +15,12 @@ namespace E_exam.Repositories
 
         public List<ExamQuestion> GetByExamId(int examId)
         {
+
             return Db.ExamQuestion.Where(eq => eq.ExamId == examId)
                 .Include(eq => eq.Question)
                 .ThenInclude(eq => eq.Options)
                 .ToList();
+
         }
         public void AddRange(int examId, ICollection<int> questionIds)
         {

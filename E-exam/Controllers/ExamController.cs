@@ -43,7 +43,6 @@ namespace E_exam.Controllers
             }
             var exam = Mapper.Map<Exam>(examFromReq);
             Unit.ExamRepo.Add(exam);
-            Unit.ExamQuestionRepo.AddRange(exam.Id, examFromReq.ExamQuestions);
             Unit.Save();
             return Ok(new { message = "Exam Added Successfully." });
         }
@@ -52,17 +51,19 @@ namespace E_exam.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            var oldExam = Unit.ExamRepo.GetById(id);
+            if (id != examFromReq.Id)
+                return BadRequest(new { message = "Id Not Matched" });
+            var oldExam = Unit.ExamRepo.GetByIdWithQuestions(id);
             if (oldExam == null)
                 return NotFound(new { message = "Exam not found" });
-            //var exam = Mapper.Map<Exam>(examFromReq);
-            //Unit.ExamRepo.Edit(exam);
-            //Unit.Save();
+
+            Mapper.Map(examFromReq, oldExam);
+
             if (examFromReq.ExamQuestions != null && examFromReq.ExamQuestions.Any())
             {
-                var currentQuestions = Unit.ExamQuestionRepo.GetByExamId(id);
+                var currentQuestions = oldExam.ExamQuestions.Select(q => q.QuestionId);
                 // Get new questions to add it
-                var questionsToAdd = examFromReq.ExamQuestions.Except(currentQuestions.Select(q => q.QuestionId)).ToList();
+                var questionsToAdd = examFromReq.ExamQuestions.Except(currentQuestions).ToList();
                 // Get old questions that are not in examFromReq to remove it
                 var questionsToRemove = (ICollection<int>)currentQuestions.Except(examFromReq.ExamQuestions.Select(questionId => new ExamQuestion
                 {
