@@ -64,7 +64,7 @@ namespace E_exam.Controllers
                 // Get new questions to add it
                 var questionsToAdd = examFromReq.ExamQuestions.Except(currentQuestions.Select(q => q.QuestionId)).ToList();
                 // Get old questions that are not in examFromReq to remove it
-                var questionsToRemove = currentQuestions.Except(examFromReq.ExamQuestions.Select(questionId => new ExamQuestion
+                var questionsToRemove = (ICollection<int>)currentQuestions.Except(examFromReq.ExamQuestions.Select(questionId => new ExamQuestion
                 {
                     ExamId = id,
                     QuestionId = questionId
@@ -77,7 +77,7 @@ namespace E_exam.Controllers
                 // Remove old questions
                 if (questionsToRemove.Any())
                 {
-                    Unit.ExamQuestionRepo.RemoveRange(questionsToRemove);
+                    Unit.ExamQuestionRepo.RemoveRange(id, questionsToRemove);
                 }
             }
             Unit.Save();

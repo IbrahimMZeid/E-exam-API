@@ -3,6 +3,7 @@ using E_exam.DTOs.ExamDTOs;
 using E_exam.DTOs.ExamQuestionDTO;
 using E_exam.DTOs.OptionDTOs;
 using E_exam.DTOs.QuestionDTOs;
+using E_exam.DTOs.StudentExamDTO;
 using E_exam.Models;
 
 namespace E_exam.MapperConfiq
@@ -13,7 +14,7 @@ namespace E_exam.MapperConfiq
         {
             ///////////// Exam
             // Exam <==> ExamListDTM
-            CreateMap<Exam,ExamListDTO>()
+            CreateMap<Exam, ExamListDTO>()
                 .ForMember(dest => dest.Subject, opt => opt.MapFrom(exam => exam.Subject.Name));
             // Exam <==> AddExamDTM
             CreateMap<Exam, ExamFormDTO>().ForMember(dest => dest.ExamQuestions,
@@ -41,6 +42,22 @@ namespace E_exam.MapperConfiq
 
             //ExamQuestion -> ExamQuestionDTO
             CreateMap<ExamQuestion, ExamQuestionDto>();
+
+            // Mapping لـ StudentExam ➝ StudentExamResultDTO
+            CreateMap<StudentExam, StudentExamResultDTO>()
+                .ForMember(dest => dest.ExamTitle, opt => opt.MapFrom(src => src.Exam.Name))
+                .ForMember(dest => dest.Subject, opt => opt.MapFrom(src => src.Exam.Subject.Name))
+                .ForMember(dest => dest.TotalScore, opt => opt.MapFrom(src => src.Exam.TotalMarks));
+
+            // Mapping لـ StudentExam ➝ StudentExamDetailsDTO
+            CreateMap<StudentExam, StudentExamDetailsDTO>()
+            .ForMember(dest => dest.StudentName, opt => opt.MapFrom(src => src.Student.FirstName + " " + src.Student.LastName))
+            .ForMember(dest => dest.ExamTitle, opt => opt.MapFrom(src => src.Exam.Name))
+            .ForMember(dest => dest.Subject, opt => opt.MapFrom(src => src.Exam.Subject.Name))
+            .ForMember(dest => dest.TotalScore, opt => opt.MapFrom(src => src.Exam.TotalMarks));
+            
+
+
         }
     }
 }

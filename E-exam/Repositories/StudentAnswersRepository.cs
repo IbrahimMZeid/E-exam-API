@@ -6,6 +6,12 @@ namespace E_exam.Repositories
     {
         public StudentAnswersRepository(E_examDBContext db) : base(db)
         {
+
         }
+        public void AddRange(IEnumerable<StudentAnswers> answers)
+        {
+            Db.StudentAnswers.AddRange(answers);
+        }
+
     }
 }
