@@ -65,7 +65,11 @@ namespace E_exam.Controllers
                 // Get new questions to add it
                 var questionsToAdd = examFromReq.ExamQuestions.Except(currentQuestions).ToList();
                 // Get old questions that are not in examFromReq to remove it
-                var questionsToRemove = currentQuestions.Except(examFromReq.ExamQuestions).ToList();
+                var questionsToRemove = (ICollection<int>)currentQuestions.Except(examFromReq.ExamQuestions.Select(questionId => new ExamQuestion
+                {
+                    ExamId = id,
+                    QuestionId = questionId
+                })).ToList();
                 // Add new questions
                 if (questionsToAdd.Any())
                 {

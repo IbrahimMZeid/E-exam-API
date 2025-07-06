@@ -1,4 +1,5 @@
 ﻿using E_exam.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_exam.Repositories
 {
@@ -12,13 +13,22 @@ namespace E_exam.Repositories
         //return specific exam state for a student by studentId and examId
         public StudentExam? GetExamStateByStudentIdAndExamId(int studentId , int examId)
         {
-            return Db.StudentExams.FirstOrDefault(se => se.StudentId == studentId && se.ExamId == examId);
+            return Db.StudentExams
+                .Include(se => se.Exam)
+                .ThenInclude(e => e.Subject)
+                .Include(se => se.Student)
+                .FirstOrDefault(se => se.StudentId == studentId && se.ExamId == examId);
         }
+
 
         //return all exams for a student by studentId
         public ICollection<StudentExam> GetAllExamsByStudentId(int studentId)
         {
-            return Db.StudentExams.Where(se => se.StudentId == studentId).ToList();
+            return Db.StudentExams
+                .Include(se => se.Exam)
+                .ThenInclude(e => e.Subject)
+                .Include(se => se.Student)
+                .Where(se => se.StudentId == studentId).ToList();
         }
     }
 }
