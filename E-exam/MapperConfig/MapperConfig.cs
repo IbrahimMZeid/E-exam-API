@@ -4,6 +4,7 @@ using E_exam.DTOs.ExamQuestionDTO;
 using E_exam.DTOs.OptionDTOs;
 using E_exam.DTOs.QuestionDTOs;
 using E_exam.DTOs.StudentExamDTO;
+using E_exam.DTOs.SubjectDTO;
 using E_exam.Models;
 
 namespace E_exam.MapperConfiq
@@ -12,6 +13,8 @@ namespace E_exam.MapperConfiq
     {
         public MapperConfig()
         {
+            // Subject
+            CreateMap<Subject, SubjectDTO>().ReverseMap();
             ///////////// Exam
             // Exam <==> ExamListDTM
             CreateMap<Exam, ExamListDTO>()
@@ -64,7 +67,7 @@ namespace E_exam.MapperConfiq
             .ForMember(dest => dest.ExamTitle, opt => opt.MapFrom(src => src.Exam.Name))
             .ForMember(dest => dest.Subject, opt => opt.MapFrom(src => src.Exam.Subject.Name))
             .ForMember(dest => dest.TotalScore, opt => opt.MapFrom(src => src.Exam.TotalMarks));
-            
+
 
 
         }

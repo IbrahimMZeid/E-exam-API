@@ -17,7 +17,7 @@ namespace E_exam.Controllers
             Unit = unit;
             Mapper = mapper;
         }
-        [HttpGet("/count")]
+        [HttpGet("count")]
         public IActionResult ExamCount()
         {
             int count = Unit.ExamRepo.Count();
