@@ -10,9 +10,10 @@ namespace E_exam.Models
         public string Name { get; set; } = string.Empty;
         [Required]
         public int TotalMarks { get; set; }
+        public int DurationInMinites { get; set; }
+        public int QuestionsCount { get; set; }
         [Required]
         public int PassMark { get; set; }
-
         public bool IsPublished { get; set; } = false;
         [ForeignKey("Subject")]
         public int SubjectId { get; set; }

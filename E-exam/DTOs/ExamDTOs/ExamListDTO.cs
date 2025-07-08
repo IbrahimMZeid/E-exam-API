@@ -7,6 +7,7 @@
         public int TotalMarks { get; set; }
         public string Subject { get; set; } = string.Empty;
         public bool IsPublished { get; set; } = false;
-
+        public int DurationInMinites { get; set; }
+        public int? QuestionsCount { get; set; }
     }
 }

@@ -12,6 +12,10 @@ namespace E_exam.Repositories
         {
             return Db.Exams.Include(e => e.Subject).ToList();
         }
+        public int Count()
+        {
+            return Db.Exams.Count();
+        }
         public override Exam? GetById(int id)
         {
             return Db.Exams
