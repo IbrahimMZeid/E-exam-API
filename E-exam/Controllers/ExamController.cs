@@ -33,10 +33,10 @@ namespace E_exam.Controllers
         [HttpGet("{id}")]
         public IActionResult getExam(int id)
         {
-            var exam = Unit.ExamRepo.GetById(id);
+            var exam = Unit.ExamRepo.GetByIdWithQuestionsAndOptions(id);
             if (exam == null)
                 return NotFound();
-            return Ok(Mapper.Map<ExamListDTO>(exam));
+            return Ok(Mapper.Map<ExamDisplayDTO>(exam));
         }
         [HttpPost]
         public IActionResult Add(ExamFormDTO examFromReq)
