@@ -1,6 +1,7 @@
 
 using E_exam.MapperConfiq;
 using E_exam.Models;
+using E_exam.Repositories;
 using E_exam.Seeds;
 using E_exam.UnitOfWorks;
 using Microsoft.AspNetCore.Identity;
@@ -20,7 +21,8 @@ namespace E_exam
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
-            builder.Services.AddDbContext<E_examDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+            builder.Services.AddDbContext<E_examDBContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
 
 
             //register identity services
@@ -37,6 +39,8 @@ namespace E_exam
             .AddDefaultTokenProviders();
 
             builder.Services.AddScoped<UnitOfWork>();
+            builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddAutoMapper(typeof(MapperConfig));
             builder.Services.AddCors(options =>
             {
@@ -59,6 +63,17 @@ namespace E_exam
                 var services = scope.ServiceProvider;
                 DbUsersInitializer.SeedRolesAndUsersAsync(services).GetAwaiter().GetResult();
             }
+
+
+
+            // seed admin and student to database
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    AdminStudentInitializer.Initialize(scope.ServiceProvider);
+            //}
+            //########### not working ###########
+
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

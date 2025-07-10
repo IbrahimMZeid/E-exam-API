@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_exam.Models
 {
     public class E_examDBContext : IdentityDbContext<ApplicationUser>
     {
-        public E_examDBContext(DbContextOptions<E_examDBContext> options):base(options)
-        {   
+        public E_examDBContext(DbContextOptions<E_examDBContext> options) : base(options)
+        {
         }
         public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<Student> Students{ get; set; }
+        public DbSet<Student> Students { get; set; }
         public DbSet<StudentExam> StudentExams { get; set; }
         public DbSet<StudentAnswers> StudentAnswers { get; set; }
         public DbSet<Exam> Exams { get; set; }
@@ -18,6 +17,8 @@ namespace E_exam.Models
         public DbSet<Question> Questions { get; set; }
         public DbSet<Option> Options { get; set; }
         public DbSet<Subject> Subjects { get; set; }
+        public DbSet<User> UsersGG { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -35,6 +36,44 @@ namespace E_exam.Models
                 .WithMany(s => s.Questions)
                 .HasForeignKey(q => q.SubjectId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<User>().HasData(
+    //SeedUsers.admin,
+    //SeedUsers.student
+    //new User
+    //{
+    //    Id = Guid.Parse("11111111-1111-1111-1111-111111111111"), // Fixed GUID
+    //    Email = "admin@gmail.com",
+    //    Username = "admin",
+    //    PasswordHash = new PasswordHasher<User>().HashPassword(null, "Admin123!"),
+    //    Role = "Admin"
+    //}
+    //new User
+    //{
+    //    Id = Guid.Parse("22222222-2222-2222-2222-222222222222"), // Fixed GUID
+    //    Email = "student@gmail.com",
+    //    Username = "student1",
+    //    PasswordHash = new PasswordHasher<User>().HashPassword(null, "Student123!"),
+    //    Role = "Student"
+    //},
+    //    new User()
+    //    {
+    //        Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+    //        Email = "admingg@gmail.com",
+    //        Username = "admin",
+    //        PasswordHash = new PasswordHasher<User>().HashPassword(null, "123"),
+    //        Role = "Admin"
+    //    },
+    //    new User()
+    //    {
+    //        Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+    //        Email = "student@gmail.com",
+    //        Username = "student1",
+    //        PasswordHash = new PasswordHasher<User>().HashPassword(null, "11"),
+    //        Role = "Student"
+    //    }
+    );
+
 
 
             // 🔄 Relation: Question - ExamQuestion
