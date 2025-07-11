@@ -29,5 +29,14 @@ namespace E_exam.Repositories
                 .Include(e => e.ExamQuestions)
                 .FirstOrDefault(e => e.Id == id);
         }
+        public Exam? GetByIdWithQuestionsAndOptions(int id)
+        {
+            return Db.Exams
+                .Include(e => e.Subject)
+                .Include(e => e.ExamQuestions)
+                .ThenInclude(eq => eq.Question)
+                .ThenInclude(q => q.Options)
+                .FirstOrDefault(e => e.Id == id);
+        }
     }
 }

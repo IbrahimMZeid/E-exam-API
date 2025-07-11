@@ -20,18 +20,26 @@ namespace E_exam.MapperConfiq
             CreateMap<Exam, ExamListDTO>()
                 .ForMember(dest => dest.Subject, opt => opt.MapFrom(exam => exam.Subject.Name));
             // Exam <==> AddExamDTM
-            CreateMap<Exam, ExamFormDTO>().ForMember(dest => dest.ExamQuestions,
-        opt => opt.MapFrom(src => src.ExamQuestions.Select(eq => eq.QuestionId).ToList()));
+            CreateMap<Exam, ExamFormDTO>().ForMember(dest => dest.ExamQuestions,opt => opt.MapFrom(src => src.ExamQuestions.Select(eq => eq.QuestionId).ToList()));
+
             CreateMap<ExamFormDTO, Exam>()
-     .ForMember(dest => dest.ExamQuestions, opt => opt.Ignore())
-     .AfterMap((src, dest) =>
-     {
-         dest.ExamQuestions = src.ExamQuestions.Select(questionId => new ExamQuestion
-         {
-             QuestionId = questionId,
-             Exam = dest
-         }).ToList();
-     });
+            .ForMember(dest => dest.ExamQuestions, opt => opt.Ignore())
+            .AfterMap((src, dest) =>
+            {
+                 dest.ExamQuestions = src.ExamQuestions.Select(questionId => new ExamQuestion
+                 {
+                     QuestionId = questionId,
+                     Exam = dest
+                 }).ToList();
+             });
+            // Exam ==> ExamDisplayDTO
+            CreateMap<Exam, ExamDisplayDTO>()
+                .AfterMap((src, dest, context) => {
+                    var mapper = context.Mapper;
+                    dest.Questions = mapper.Map<List<QuestionDisplayDTO>>(src.ExamQuestions.Select(eq => eq.Question));
+                    dest.Subject = src.Subject.Name;
+                });
+                //.ForMember(dest => dest.Questions, opt => opt.MapFrom(src =>  ));
             // Question -> QuestionDTO
             CreateMap<Question, QuestionDTO>()
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => (int)src.Type))
@@ -44,7 +52,9 @@ namespace E_exam.MapperConfiq
             // CreateQuestionDTO -> Question
             CreateMap<CreateQuestionDTO, Question>()
                 .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options));
-
+            // Question => QuestionDisplayDTO
+            CreateMap<Question, QuestionDisplayDTO>()
+                .ForMember(dest => dest.Options, opt => opt.MapFrom(src => src.Options.Select(o => o.Title)));
 
             // Option -> OptionDTO
             CreateMap<Option, OptionDTO>();
