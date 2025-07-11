@@ -127,7 +127,7 @@ namespace E_exam.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("Exams");
+                    b.ToTable("Exams", (string)null);
                 });
 
             modelBuilder.Entity("E_exam.Models.ExamQuestion", b =>
@@ -142,7 +142,7 @@ namespace E_exam.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("ExamQuestion");
+                    b.ToTable("ExamQuestion", (string)null);
                 });
 
             modelBuilder.Entity("E_exam.Models.Option", b =>
@@ -168,7 +168,7 @@ namespace E_exam.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Options");
+                    b.ToTable("Options", (string)null);
                 });
 
             modelBuilder.Entity("E_exam.Models.Question", b =>
@@ -200,7 +200,7 @@ namespace E_exam.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("E_exam.Models.Student", b =>
@@ -234,7 +234,7 @@ namespace E_exam.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("E_exam.Models.StudentAnswers", b =>
@@ -265,7 +265,7 @@ namespace E_exam.Migrations
 
                     b.HasIndex("SelectedOptionId");
 
-                    b.ToTable("StudentAnswers");
+                    b.ToTable("StudentAnswers", (string)null);
                 });
 
             modelBuilder.Entity("E_exam.Models.StudentExam", b =>
@@ -286,7 +286,7 @@ namespace E_exam.Migrations
 
                     b.HasIndex("ExamId");
 
-                    b.ToTable("StudentExams");
+                    b.ToTable("StudentExams", (string)null);
                 });
 
             modelBuilder.Entity("E_exam.Models.Subject", b =>
@@ -304,7 +304,7 @@ namespace E_exam.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subjects");
+                    b.ToTable("Subjects", (string)null);
                 });
 
             modelBuilder.Entity("E_exam.Models.Teacher", b =>
@@ -335,7 +335,7 @@ namespace E_exam.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Teachers");
+                    b.ToTable("Teachers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
