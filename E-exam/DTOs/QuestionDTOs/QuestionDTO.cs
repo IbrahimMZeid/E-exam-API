@@ -11,8 +11,8 @@ namespace E_exam.DTOs.QuestionDTOs
         public int Id { get; set; }
         public string Title { get; set; } 
         public int Score { get; set; }
-        public string Type { get; set; } 
-        public string Difficulty { get; set; } 
+        public int Type { get; set; } 
+        public int Difficulty { get; set; } 
         public int SubjectId { get; set; }
         public string SubjectName { get; set; }
 

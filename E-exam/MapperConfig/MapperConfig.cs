@@ -34,8 +34,8 @@ namespace E_exam.MapperConfiq
      });
             // Question -> QuestionDTO
             CreateMap<Question, QuestionDTO>()
-                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.ToString()))
-                .ForMember(dest => dest.Difficulty, opt => opt.MapFrom(src => src.Difficulty.ToString()))
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => (int)src.Type))
+                .ForMember(dest => dest.Difficulty, opt => opt.MapFrom(src => (int)src.Difficulty))
                 .ForMember(dest => dest.SubjectName, opt => opt.MapFrom(src => src.Subject.Name));
 
             // QuestionDTO -> Question (optional)

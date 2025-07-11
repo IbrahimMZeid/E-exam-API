@@ -10,6 +10,7 @@ namespace E_exam.DTOs.OptionDTOs
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public bool IsCorrect { get; set; }
+        public int QuestionId { get; set; }
         //public int Mark { get; set; }
     }
 }
