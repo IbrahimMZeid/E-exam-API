@@ -6,8 +6,8 @@ namespace E_exam.Repositories
 {
     public interface IAuthRepository
     {
-        public Task<User> RegisterAsync(UserRegisterDTO userFromReq);
-        public Task<string> LoginAsync(UserDTO userFromReq);
+        public Task<UserStudentDTO> RegisterAsync(UserRegisterDTO userFromReq);
+        public Task<string> LoginAsync(UserLoginDTO userFromReq);
         public User? GiveRole(string username, string role);
 
         //overload to the method to accept json body from request not only query parameters

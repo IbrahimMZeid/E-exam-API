@@ -1,8 +1,8 @@
 ﻿namespace E_exam.DTOs.UserDTOs
 {
-    public class UserDTO
+    public class UserLoginDTO
     {
-        public string username { get; set; }
+        public string email { get; set; }
         public string password { get; set; }
     }
 }

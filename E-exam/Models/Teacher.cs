@@ -7,17 +7,19 @@ namespace E_exam.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        [StringLength(450)]
+
         [ForeignKey("User")]
-        public string UserId { get; set; } = string.Empty;
-        public virtual ApplicationUser User { get; set; } = null!;
+        public int? UserId { get; set; }
+        public virtual User? User { get; set; }
+
         [Required]
         [StringLength(100)]
         public string FirstName { get; set; } = string.Empty;
+
         [Required]
         [StringLength(100)]
-        public string LastName { get; set; } = String.Empty;
-        public virtual ICollection<Exam> Exams { get; set; } = new List<Exam>();
+        public string? LastName { get; set; } = string.Empty;
+
+        public virtual ICollection<Exam>? Exams { get; set; } = new List<Exam>();
     }
 }

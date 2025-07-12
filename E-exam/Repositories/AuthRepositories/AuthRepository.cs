@@ -1,6 +1,7 @@
 ﻿using E_exam.DTOs.UserDTOs;
 using E_exam.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,32 +11,51 @@ namespace E_exam.Repositories
 {
     public class AuthRepository(E_examDBContext db, IConfiguration configuration) : IAuthRepository
     {
-        public async Task<User> RegisterAsync(UserRegisterDTO userFromReq)
+        public async Task<UserStudentDTO> RegisterAsync(UserRegisterDTO userFromReq)
         {
-            if (db.UsersGG.Any(u => u.Username == userFromReq.username))
+
+            if (await db.Users.AnyAsync(u => u.Email == userFromReq.Email))
             {
                 return null;
             }
-            User user = new User();
-            user.Email = userFromReq.email;
-            user.Username = userFromReq.username;
-            user.PasswordHash = new PasswordHasher<User>().HashPassword(user, userFromReq.password);
-            user.Role = "student";
-            db.UsersGG.Add(user);
+
+            User user = new User()
+            {
+                Email = userFromReq.Email,
+                PasswordHash = new PasswordHasher<User>().HashPassword(null, userFromReq.Password),
+                Role = "student",
+                Student = new Student()
+                {
+                    FirstName = userFromReq.FirstName,
+                    LastName = userFromReq.LastName,
+                    DateOfBirth = userFromReq.DateOfBirth,
+                }
+            };
+
+            db.Users.Add(user);
             await db.SaveChangesAsync();
 
-            return user;
+            return new UserStudentDTO()
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                Role = user.Role,
+                StudentId = user.Student.Id,
+                FirstName = user.Student.FirstName,
+                LastName = user.Student.LastName,
+                DateOfBirth = user.Student.DateOfBirth
+            };
         }
 
-        public async Task<string> LoginAsync(UserDTO userFromReq)
+        public async Task<string> LoginAsync(UserLoginDTO userFromReq)
         {
-            User user = db.UsersGG.FirstOrDefault(u=>u.Username ==  userFromReq.username);
+            User user = db.Users.FirstOrDefault(u => u.Email == userFromReq.email);
 
-            if(user is null)
+            if (user is null)
             {
                 return null;
             }
-            if(new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash,userFromReq.password) 
+            if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, userFromReq.password)
                 == PasswordVerificationResult.Failed)
             {
                 return null;
@@ -50,7 +70,7 @@ namespace E_exam.Repositories
             var _claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, u.Id.ToString()),
-                new Claim(ClaimTypes.Name, u.Username),
+                new Claim(ClaimTypes.Email, u.Email),
                 new Claim(ClaimTypes.Role, u.Role)
             };
 
@@ -71,10 +91,10 @@ namespace E_exam.Repositories
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
 
-        public User? GiveRole(string username, string role)
+        public User? GiveRole(string email, string role)
         {
-            var user = db.UsersGG.FirstOrDefault(u=>u.Username==username);
-            if(user is null)
+            var user = db.Users.FirstOrDefault(u => u.Email == email);
+            if (user is null)
                 return null;
 
             user.Role = role;
@@ -85,7 +105,7 @@ namespace E_exam.Repositories
 
         public User? GiveRole(UserRoleDTO request)
         {
-            var user = db.UsersGG.FirstOrDefault(u => u.Username == request.username);
+            var user = db.Users.FirstOrDefault(u => u.Email == request.email);
             if (user is null)
                 return null;
 

@@ -5,6 +5,6 @@ namespace E_exam.Repositories
     public interface IUserRepository
     {
         List<DisplayedUserDTO> GetAll();
-        DisplayedUserDTO GetUserByUserName(string userName);
+        DisplayedUserDTO GetUserByEmail(string email);
     }
 }

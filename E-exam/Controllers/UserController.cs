@@ -1,8 +1,7 @@
 ﻿using E_exam.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace myAuthAPI.Controllers
+namespace E_exam.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -15,9 +14,9 @@ namespace myAuthAPI.Controllers
         }
 
         [HttpGet("getuser")]
-        public ActionResult GetUserByUsername(string username)
+        public ActionResult GetUserByEmail(string email)
         {
-            var displayedUser = repo.GetUserByUserName(username);
+            var displayedUser = repo.GetUserByEmail(email);
 
             if (displayedUser == null)
                 return NotFound("Username not found");

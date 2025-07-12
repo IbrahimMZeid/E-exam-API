@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace E_exam.Models
 {
-    public class E_examDBContext : IdentityDbContext<ApplicationUser>
+    public class E_examDBContext : DbContext
     {
         public E_examDBContext(DbContextOptions<E_examDBContext> options) : base(options)
         {
         }
+        public DbSet<User> Users { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<StudentExam> StudentExams { get; set; }
@@ -17,7 +17,6 @@ namespace E_exam.Models
         public DbSet<Question> Questions { get; set; }
         public DbSet<Option> Options { get; set; }
         public DbSet<Subject> Subjects { get; set; }
-        public DbSet<User> UsersGG { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -137,6 +136,5 @@ namespace E_exam.Models
             //    .HasForeignKey(e => e.TeacherId)
             //    .OnDelete(DeleteBehavior.Restrict);
         }
-
     }
 }
