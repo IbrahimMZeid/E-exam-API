@@ -2,10 +2,12 @@
 using E_exam.MapperConfiq;
 using E_exam.Models;
 using E_exam.Repositories;
-using E_exam.Seeds;
 using E_exam.UnitOfWorks;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
+using System.Text;
 
 namespace E_exam
 {
@@ -25,18 +27,23 @@ namespace E_exam
             options.UseSqlServer(builder.Configuration.GetConnectionString("default")));
 
 
-            //register identity services
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-            {
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 6;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequiredUniqueChars = 0;
-            })
-            .AddEntityFrameworkStores<E_examDBContext>()
-            .AddDefaultTokenProviders();
+
+            // Register Authentication scheme and JWT Bearer token validation
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
+                AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateLifetime = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.
+                            GetBytes(builder.Configuration.GetValue<string>("Token")!)),
+                        //ValidateIssuerSigningKey = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
+
+
 
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
@@ -57,22 +64,6 @@ namespace E_exam
 
             var app = builder.Build();
 
-            // seed roles and users to datavbase
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                DbUsersInitializer.SeedRolesAndUsersAsync(services).GetAwaiter().GetResult();
-            }
-
-
-
-            // seed admin and student to database
-            //using (var scope = app.Services.CreateScope())
-            //{
-            //    AdminStudentInitializer.Initialize(scope.ServiceProvider);
-            //}
-            //########### not working ###########
-
 
 
             // Configure the HTTP request pipeline.
@@ -80,10 +71,11 @@ namespace E_exam
             {
                 app.MapOpenApi();
                 app.UseSwaggerUI(op => op.SwaggerEndpoint("/openapi/v1.json", "v1"));
+                app.MapScalarApiReference();
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseCors(txt);
             app.MapControllers();

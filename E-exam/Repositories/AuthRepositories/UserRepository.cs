@@ -7,10 +7,9 @@ namespace E_exam.Repositories
     {
         public List<DisplayedUserDTO> GetAll()
         {
-            List<DisplayedUserDTO> customUsers = db.UsersGG.Select(u => new DisplayedUserDTO()
+            List<DisplayedUserDTO> customUsers = db.Users.Select(u => new DisplayedUserDTO()
             {
                 id = u.Id.ToString(),
-                username = u.Username,
                 email = u.Email,
                 role = u.Role
             }).ToList();
@@ -18,16 +17,15 @@ namespace E_exam.Repositories
             return customUsers;
         }
 
-        public DisplayedUserDTO GetUserByUserName(string userName)
+        public DisplayedUserDTO GetUserByEmail(string email)
         {
-            User u = db.UsersGG.FirstOrDefault(u => u.Username == userName);
+            User u = db.Users.FirstOrDefault(u => u.Email == email);
             if (u == null)
                 return null;
 
             return new DisplayedUserDTO()
             {
                 id = u.Id.ToString(),
-                username = u.Username,
                 email = u.Email,
                 role = u.Role
             };

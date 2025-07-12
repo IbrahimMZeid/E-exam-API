@@ -12,16 +12,17 @@ namespace E_exam.Repositories
     {
         public async Task<User> RegisterAsync(UserRegisterDTO userFromReq)
         {
-            if (db.UsersGG.Any(u => u.Username == userFromReq.username))
+            if (db.Users.Any(u => u.Email == userFromReq.email))
             {
                 return null;
             }
             User user = new User();
+            //user.Id = DateTime.Now.Ticks.GetHashCode();
             user.Email = userFromReq.email;
-            user.Username = userFromReq.username;
+            //user.Username = userFromReq.username;
             user.PasswordHash = new PasswordHasher<User>().HashPassword(user, userFromReq.password);
             user.Role = "student";
-            db.UsersGG.Add(user);
+            db.Users.Add(user);
             await db.SaveChangesAsync();
 
             return user;
@@ -29,13 +30,13 @@ namespace E_exam.Repositories
 
         public async Task<string> LoginAsync(UserDTO userFromReq)
         {
-            User user = db.UsersGG.FirstOrDefault(u=>u.Username ==  userFromReq.username);
+            User user = db.Users.FirstOrDefault(u => u.Email == userFromReq.email);
 
-            if(user is null)
+            if (user is null)
             {
                 return null;
             }
-            if(new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash,userFromReq.password) 
+            if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, userFromReq.password)
                 == PasswordVerificationResult.Failed)
             {
                 return null;
@@ -50,7 +51,7 @@ namespace E_exam.Repositories
             var _claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, u.Id.ToString()),
-                new Claim(ClaimTypes.Name, u.Username),
+                new Claim(ClaimTypes.Name, u.Email),
                 new Claim(ClaimTypes.Role, u.Role)
             };
 
@@ -71,10 +72,10 @@ namespace E_exam.Repositories
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
 
-        public User? GiveRole(string username, string role)
+        public User? GiveRole(string email, string role)
         {
-            var user = db.UsersGG.FirstOrDefault(u=>u.Username==username);
-            if(user is null)
+            var user = db.Users.FirstOrDefault(u => u.Email == email);
+            if (user is null)
                 return null;
 
             user.Role = role;
@@ -85,7 +86,7 @@ namespace E_exam.Repositories
 
         public User? GiveRole(UserRoleDTO request)
         {
-            var user = db.UsersGG.FirstOrDefault(u => u.Username == request.username);
+            var user = db.Users.FirstOrDefault(u => u.Email == request.email);
             if (user is null)
                 return null;
 

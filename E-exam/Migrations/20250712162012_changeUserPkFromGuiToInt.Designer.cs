@@ -4,6 +4,7 @@ using E_exam.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_exam.Migrations
 {
     [DbContext(typeof(E_examDBContext))]
-    partial class E_examDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250712162012_changeUserPkFromGuiToInt")]
+    partial class changeUserPkFromGuiToInt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,7 +65,7 @@ namespace E_exam.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("Exams", (string)null);
+                    b.ToTable("Exams");
                 });
 
             modelBuilder.Entity("E_exam.Models.ExamQuestion", b =>
@@ -77,7 +80,7 @@ namespace E_exam.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("ExamQuestion", (string)null);
+                    b.ToTable("ExamQuestion");
                 });
 
             modelBuilder.Entity("E_exam.Models.Option", b =>
@@ -103,7 +106,7 @@ namespace E_exam.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("Options", (string)null);
+                    b.ToTable("Options");
                 });
 
             modelBuilder.Entity("E_exam.Models.Question", b =>
@@ -135,7 +138,7 @@ namespace E_exam.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("E_exam.Models.Student", b =>
@@ -159,14 +162,9 @@ namespace E_exam.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("E_exam.Models.StudentAnswers", b =>
@@ -197,7 +195,7 @@ namespace E_exam.Migrations
 
                     b.HasIndex("SelectedOptionId");
 
-                    b.ToTable("StudentAnswers", (string)null);
+                    b.ToTable("StudentAnswers");
                 });
 
             modelBuilder.Entity("E_exam.Models.StudentExam", b =>
@@ -218,7 +216,7 @@ namespace E_exam.Migrations
 
                     b.HasIndex("ExamId");
 
-                    b.ToTable("StudentExams", (string)null);
+                    b.ToTable("StudentExams");
                 });
 
             modelBuilder.Entity("E_exam.Models.Subject", b =>
@@ -236,7 +234,7 @@ namespace E_exam.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Subjects", (string)null);
+                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("E_exam.Models.Teacher", b =>
@@ -257,14 +255,9 @@ namespace E_exam.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Teachers", (string)null);
+                    b.ToTable("Teachers");
                 });
 
             modelBuilder.Entity("E_exam.Models.User", b =>
@@ -289,7 +282,7 @@ namespace E_exam.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("E_exam.Models.Exam", b =>
@@ -352,17 +345,6 @@ namespace E_exam.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("E_exam.Models.Student", b =>
-                {
-                    b.HasOne("E_exam.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("E_exam.Models.StudentAnswers", b =>
                 {
                     b.HasOne("E_exam.Models.Exam", "Exam")
@@ -411,17 +393,6 @@ namespace E_exam.Migrations
                     b.Navigation("Exam");
 
                     b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("E_exam.Models.Teacher", b =>
-                {
-                    b.HasOne("E_exam.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("E_exam.Models.Exam", b =>

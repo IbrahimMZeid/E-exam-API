@@ -5,14 +5,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
-namespace myAuthAPI.Controllers
+namespace E_exam.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController(IAuthRepository userRepo) : ControllerBase
     {
-        public static User myUser = new();
-
         [HttpPost("Register")]
         public async Task<ActionResult> Register(UserRegisterDTO userFromReq)
         {
@@ -23,10 +21,11 @@ namespace myAuthAPI.Controllers
             return Ok(user);
         }
 
+
         [HttpPost("Login")]
         public async Task<ActionResult> Login(UserDTO userFromReq)
         {
-            if (userFromReq == null || userFromReq.username is null)
+            if (userFromReq == null || userFromReq.email is null)
             {
                 return NotFound("Username or password is incorrect!");
                 //return Content("enter username and password like this: /login?username=x&password=y");
@@ -38,27 +37,30 @@ namespace myAuthAPI.Controllers
             return Ok(token);
         }
 
-        [HttpGet("AuthOnly")]
-        [Authorize]
-        public IActionResult AuthOnly()
-        {
-            return Content("You Are Authorized");
-            ;
-        }
 
-        [HttpPut("giveroleQueryParams")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult GiveRole(string username, string role)
-        {
-            var user = userRepo.GiveRole(username, role);
-            if (user == null)
-                return NotFound("user not found");
+        //[HttpGet("AuthOnlyTest")]
+        //[Authorize]
+        //public IActionResult AuthOnly()
+        //{
+        //    return Content("You Are Authorized");
+        //}
 
-            return Ok(user);
-        }
 
-        [HttpPut("giverole")]
-        [Authorize(Roles = "Admin")]
+        //[HttpPut("giveroleQueryParams")]
+        //[Authorize(Roles = "Admin,admin")]
+        //public IActionResult GiveRole(string username, string role)
+        //{
+        //    var user = userRepo.GiveRole(username, role);
+        //    if (user == null)
+        //        return NotFound("user not found");
+
+        //    return Ok(user);
+        //}
+
+
+        // This endpoint allows giving a role to a user by passing a JSON body in the request
+        [HttpPut("Give_Role")]
+        [Authorize(Roles = "admin,admin")]
         public IActionResult GiveRole([FromBody] UserRoleDTO request)
         {
             var user = userRepo.GiveRole(request);
