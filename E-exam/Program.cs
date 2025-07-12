@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using System.Security.Claims;
 using System.Text;
 
 namespace E_exam
@@ -37,9 +38,10 @@ namespace E_exam
                         ValidateLifetime = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.
                             GetBytes(builder.Configuration.GetValue<string>("Token")!)),
-                        //ValidateIssuerSigningKey = true,
+                        ValidateIssuerSigningKey = true,
                         ValidateIssuer = false,
-                        ValidateAudience = false
+                        ValidateAudience = false,
+                        RoleClaimType = ClaimTypes.Role
                     };
                 });
 

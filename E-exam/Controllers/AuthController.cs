@@ -60,7 +60,7 @@ namespace E_exam.Controllers
 
         // This endpoint allows giving a role to a user by passing a JSON body in the request
         [HttpPut("Give_Role")]
-        [Authorize(Roles = "admin,admin")]
+        [Authorize(Roles = "Admin,admin")]
         public IActionResult GiveRole([FromBody] UserRoleDTO request)
         {
             var user = userRepo.GiveRole(request);
