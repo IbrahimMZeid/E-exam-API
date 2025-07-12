@@ -8,10 +8,9 @@ namespace E_exam.Models
         [Key]
         public int Id { get; set; }
 
-        //[Required]
         [ForeignKey("User")]
-        public int UserId { get; set; }
-        public virtual User User { get; set; } = null!;
+        public int? UserId { get; set; }
+        public virtual User? User { get; set; }
 
         [Required]
         [StringLength(100)]
@@ -19,11 +18,11 @@ namespace E_exam.Models
 
         [Required]
         [StringLength(100)]
-        public string? LastName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
 
         public DateTime? DateOfBirth { get; set; }
 
         public virtual ICollection<StudentExam>? StudentExams { get; set; } = new List<StudentExam>();
-        public virtual ICollection<StudentAnswers> StudentAnswers { get; set; } = new List<StudentAnswers>();
+        public virtual ICollection<StudentAnswers>? StudentAnswers { get; set; } = new List<StudentAnswers>();
     }
 }

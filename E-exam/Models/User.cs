@@ -8,10 +8,16 @@ namespace E_exam.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
         [Required]
         [StringLength(100)]
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public string? Role { get; set; }
+
+
+        // Navigation properties for related entities
+        public virtual Teacher? Teacher { get; set; }
+        public virtual Student? Student { get; set; }
     }
 }
