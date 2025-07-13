@@ -2,6 +2,7 @@
 using E_exam.MapperConfiq;
 using E_exam.Models;
 using E_exam.Repositories;
+using E_exam.Seeds;
 using E_exam.UnitOfWorks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,7 @@ namespace E_exam
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).
                 AddJwtBearer(options =>
                 {
+                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateLifetime = true,
@@ -66,13 +68,18 @@ namespace E_exam
 
 
             var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                DbUsersInitializer.SeedRolesAndUsersAsync(services).GetAwaiter().GetResult();
+            }
 
 
 
             // Configure the HTTP request pipeline.
             //if (app.Environment.IsDevelopment())
             //{
-                app.MapOpenApi();
+            app.MapOpenApi();
                 app.UseSwaggerUI(op => op.SwaggerEndpoint("/openapi/v1.json", "v1"));
                 app.MapScalarApiReference();
             //}

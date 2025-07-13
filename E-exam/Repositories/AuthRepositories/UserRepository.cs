@@ -11,7 +11,7 @@ namespace E_exam.Repositories
             var customUsers = db.Users.Include(u => u.Teacher).Include(u => u.Student).Select(u => new DisplayedUserDTO()
             {
                 id = u.Id.ToString(),
-                name = u.Role.Equals("teacher")? $"{u.Teacher.FirstName} {u.Teacher.LastName}": $"{u.Student.FirstName} {u.Student.LastName}",
+                name = u.Role.ToLower().Equals("admin")? $"{u.Teacher.FirstName} {u.Teacher.LastName}": $"{u.Student.FirstName} {u.Student.LastName}",
                 role = u.Role
             }).ToList();
 
@@ -27,7 +27,7 @@ namespace E_exam.Repositories
             return new DisplayedUserDTO()
             {
                 id = u.Id.ToString(),
-                name = u.Role.Equals("teacher") ? $"{u.Teacher.FirstName} {u.Teacher.LastName}" : $"{u.Student.FirstName} {u.Student.LastName}",
+                name = u.Role.ToLower().Equals("admin") ? $"{u.Teacher.FirstName} {u.Teacher.LastName}" : $"{u.Student.FirstName} {u.Student.LastName}",
                 role = u.Role
             };
         }
