@@ -48,16 +48,33 @@ namespace E_exam.Repositories
 
         public async Task<string> LoginAsync(UserLoginDTO userFromReq)
         {
-            User user = db.Users.FirstOrDefault(u => u.Email == userFromReq.email);
+            User user = null;
+
+            if (userFromReq.role == "admin")
+            {
+                user = await db.Users.Include(u => u.Teacher).FirstOrDefaultAsync(u => u.Email == userFromReq.email);
+            }
+            else if (userFromReq.role == "student")
+            {
+                user = await db.Users.Include(u => u.Student).FirstOrDefaultAsync(u => u.Email == userFromReq.email);
+            }
 
             if (user is null)
             {
                 return null;
             }
-            if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, userFromReq.password)
-                == PasswordVerificationResult.Failed)
+
+            if (user.Role == userFromReq.role)
             {
-                return null;
+                if (new PasswordHasher<User>().VerifyHashedPassword(user, user.PasswordHash, userFromReq.password)
+                    == PasswordVerificationResult.Failed)
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null; // Role mismatch
             }
 
             return CreateToken(user);
@@ -66,12 +83,32 @@ namespace E_exam.Repositories
         private string CreateToken(User u)
         {
             //1. claims (optional/ mandatory if role based authorization enabled)
-            var _claims = new List<Claim>
+            List<Claim> _claims = null;
+            if (u.Role == "admin")
+            {
+                _claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, u.Id.ToString()),
                 new Claim(ClaimTypes.Email, u.Email),
-                new Claim(ClaimTypes.Role, u.Role)
+                new Claim(ClaimTypes.Role, u.Role),
+                new Claim("FirstName", u.Teacher?.FirstName ?? string.Empty),
+                new Claim("LastName", u.Teacher?.LastName ?? string.Empty),
+                new Claim("TeacherId", u.Teacher?.Id.ToString() ?? string.Empty),
             };
+            }
+            else if (u.Role == "student")
+            {
+                _claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, u.Id.ToString()),
+                new Claim(ClaimTypes.Email, u.Email),
+                new Claim(ClaimTypes.Role, u.Role),
+                new Claim("FirstName", u.Student?.FirstName ?? string.Empty),
+                new Claim("LastName", u.Student?.LastName ?? string.Empty),
+                new Claim("StudentId", u.Student?.Id.ToString() ?? string.Empty),
+                new Claim("DateOfBirth", u.Student?.DateOfBirth.Value.ToShortDateString() ?? string.Empty),
+            };
+            }
 
             //2. secret key, needs to install package: System.IdentityModel.Tokens.Jwt
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration.GetValue<string>("Token")!));
