@@ -22,11 +22,17 @@ namespace E_exam.Controllers
             this.mapper = mapper;
         }
 
-        [HttpGet("count")]
+        [HttpGet("CountOfStudents")]
         public IActionResult GetCountOfStudents()
         {
             int numberOfStudents = unit.StudentRepo.Count();
             return Ok(numberOfStudents);
+        }
+        [HttpGet("CountOfTryExam")]
+        public IActionResult GetCountOftacks()
+        {
+            int numberOfTryExam = unit.StudentExamRepo.Count();
+            return Ok(numberOfTryExam);
         }
 
         [HttpGet("exams")]
