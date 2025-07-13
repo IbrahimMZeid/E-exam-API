@@ -13,8 +13,9 @@
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
-      //"launchUrl": "swagger",
-      "launchUrl": "scalar/v1#tag/auth/post/api/Auth/Register",
+      "launchUrl": "swagger",
+      //"launchUrl": "scalar/v1",
+      //"launchUrl": "scalar/v1#tag/auth/post/api/Auth/Register",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
