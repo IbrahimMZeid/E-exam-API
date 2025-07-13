@@ -39,6 +39,7 @@ namespace E_exam.Controllers
             return Ok(numberOfTryExam);
         }
 
+        [Authorize(Roles = "student")]
         [HttpGet("exams")]
         public IActionResult GetAllAvailableExams()
         {

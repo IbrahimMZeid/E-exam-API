@@ -34,7 +34,7 @@ namespace E_exam.Controllers
             return Ok(Mapper.Map<List<ExamListDTO>>(exams));
         }
         [HttpGet("{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,student")]
         public IActionResult getExam(int id)
         {
             var exam = Unit.ExamRepo.GetByIdWithQuestionsAndOptions(id);
