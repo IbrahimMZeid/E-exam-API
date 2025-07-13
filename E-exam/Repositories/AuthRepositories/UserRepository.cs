@@ -1,5 +1,6 @@
 ﻿using E_exam.DTOs.UserDTOs;
 using E_exam.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_exam.Repositories
 {
@@ -7,10 +8,10 @@ namespace E_exam.Repositories
     {
         public List<DisplayedUserDTO> GetAll()
         {
-            List<DisplayedUserDTO> customUsers = db.Users.Select(u => new DisplayedUserDTO()
+            var customUsers = db.Users.Include(u => u.Teacher).Include(u => u.Student).Select(u => new DisplayedUserDTO()
             {
                 id = u.Id.ToString(),
-                email = u.Email,
+                name = u.Role.Equals("teacher")? $"{u.Teacher.FirstName} {u.Teacher.LastName}": $"{u.Student.FirstName} {u.Student.LastName}",
                 role = u.Role
             }).ToList();
 
@@ -19,14 +20,14 @@ namespace E_exam.Repositories
 
         public DisplayedUserDTO GetUserByEmail(string email)
         {
-            User u = db.Users.FirstOrDefault(u => u.Email == email);
+            User u = db.Users.Include(u => u.Teacher).Include(u => u.Student).FirstOrDefault(u => u.Email == email);
             if (u == null)
                 return null;
 
             return new DisplayedUserDTO()
             {
                 id = u.Id.ToString(),
-                email = u.Email,
+                name = u.Role.Equals("teacher") ? $"{u.Teacher.FirstName} {u.Teacher.LastName}" : $"{u.Student.FirstName} {u.Student.LastName}",
                 role = u.Role
             };
         }

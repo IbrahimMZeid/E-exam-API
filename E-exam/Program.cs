@@ -50,6 +50,7 @@ namespace E_exam
             builder.Services.AddScoped<UnitOfWork>();
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddAutoMapper(typeof(MapperConfig));
             builder.Services.AddCors(options =>
             {
@@ -69,12 +70,12 @@ namespace E_exam
 
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
+            //if (app.Environment.IsDevelopment())
+            //{
                 app.MapOpenApi();
                 app.UseSwaggerUI(op => op.SwaggerEndpoint("/openapi/v1.json", "v1"));
                 app.MapScalarApiReference();
-            }
+            //}
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
