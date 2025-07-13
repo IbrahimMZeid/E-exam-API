@@ -30,5 +30,9 @@ namespace E_exam.Repositories
                 .Include(se => se.Student)
                 .Where(se => se.StudentId == studentId).ToList();
         }
+        public int Count()
+        {
+            return Db.StudentExams.Count();
+        }
     }
 }
