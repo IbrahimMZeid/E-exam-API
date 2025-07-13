@@ -5,6 +5,7 @@ using E_exam.DTOs.QuestionDTOs;
 using E_exam.DTOs.StudentExamDTO;
 using E_exam.Models;
 using E_exam.UnitOfWorks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,12 +23,15 @@ namespace E_exam.Controllers
             this.mapper = mapper;
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet("CountOfStudents")]
         public IActionResult GetCountOfStudents()
         {
             int numberOfStudents = unit.StudentRepo.Count();
             return Ok(numberOfStudents);
         }
+
+        [Authorize(Roles = "admin")]
         [HttpGet("CountOfTryExam")]
         public IActionResult GetCountOftacks()
         {
