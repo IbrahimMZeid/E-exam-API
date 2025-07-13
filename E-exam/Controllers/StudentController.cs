@@ -35,7 +35,7 @@ namespace E_exam.Controllers
             var takenExams = unit.StudentExamRepo.GetAllExamsByStudentId(id);
             if (takenExams == null || !takenExams.Any())
             {
-                return NotFound("No exams found for the given student ID.");
+                return Ok(new List<Question> { });
             }
 
             var result = mapper.Map<List<StudentExamResultDTO>>(takenExams);
@@ -49,7 +49,7 @@ namespace E_exam.Controllers
             var examState = unit.StudentExamRepo.GetExamStateByStudentIdAndExamId(studentId, examId);
             if (examState == null)
             {
-                return NotFound("Exam state not found for the given student ID and exam ID.");
+                Ok(new List<Question> { });
             }
             var dto = new StudentExamDetailsDTO
             {
@@ -71,14 +71,14 @@ namespace E_exam.Controllers
             var exam = unit.ExamRepo.GetById(id);
             if (exam == null)
             {
-                return NotFound("Exam not found.");
+                return Ok(new List<Question> { });
             }
 
             var examQuestions = unit.ExamQuestionRepo.GetByExamId(id);
 
             if (examQuestions == null || !examQuestions.Any())
             {
-                return NotFound("No questions found for the given exam ID.");
+                return Ok(new List<Question> { });
             }
 
             var result = examQuestions.Select(eq => new QuestionWithOptionsDTO
