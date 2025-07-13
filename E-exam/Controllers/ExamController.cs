@@ -38,6 +38,16 @@ namespace E_exam.Controllers
                 return NotFound();
             return Ok(Mapper.Map<ExamDisplayDTO>(exam));
         }
+
+        [HttpGet("GetForEdit/{id}")]
+        public IActionResult GetForEdit(int id)
+        {
+            var exam = Unit.ExamRepo.GetByIdWithQuestionsAndOptions(id);
+            if (exam == null)
+                return NotFound();
+            return Ok(Mapper.Map<ExamFormDTO>(exam));
+        }
+
         [HttpPost]
         public IActionResult Add(ExamFormDTO examFromReq)
         {
