@@ -2,6 +2,7 @@
 using E_exam.DTOs.QuestionDTOs;
 using E_exam.Models;
 using E_exam.UnitOfWorks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,7 +53,7 @@ namespace E_exam.Controllers
             return Ok(data);
         }
 
-
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult Create(CreateQuestionDTO dto)
         {
@@ -77,6 +78,7 @@ namespace E_exam.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Update(int id, CreateQuestionDTO dto)
         {
             if (!ModelState.IsValid)
@@ -117,6 +119,7 @@ namespace E_exam.Controllers
 
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(int id)
         {
             var question = UnitOfWork.QuestionRepo.GetById(id);
