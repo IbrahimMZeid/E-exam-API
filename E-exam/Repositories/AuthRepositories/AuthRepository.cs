@@ -13,7 +13,6 @@ namespace E_exam.Repositories
     {
         public async Task<UserStudentDTO> RegisterAsync(UserRegisterDTO userFromReq)
         {
-
             if (await db.Users.AnyAsync(u => u.Email == userFromReq.Email))
             {
                 return null;

@@ -8,7 +8,7 @@ namespace E_exam.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IAuthRepository userRepo) : ControllerBase
+    public class AuthController(IAuthRepository userRepo, IUserRepository userData) : ControllerBase
     {
         [HttpPost("Register")]
         public async Task<ActionResult> Register(UserRegisterDTO userFromReq)
@@ -27,11 +27,12 @@ namespace E_exam.Controllers
             {
                 return NotFound("Username or password is incorrect!");
             }
+            var user = userData.GetUserByEmail(userFromReq.email);
             string token = await userRepo.LoginAsync(userFromReq);
             if (token is null)
                 return NotFound("Username or password is incorrect!");
 
-            return Ok(token);
+            return Ok( new {token, user });
         }
 
         // This endpoint allows giving a role to a user by passing a JSON body in the request

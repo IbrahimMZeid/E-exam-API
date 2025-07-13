@@ -3,12 +3,15 @@ using AutoMapper;
 using E_exam.DTOs.SubjectDTO;
 using E_exam.Models;
 using E_exam.UnitOfWorks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_exam.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "admin")]
+
     public class SubjectController : ControllerBase
     {
         private readonly UnitOfWork _unitOfWork;

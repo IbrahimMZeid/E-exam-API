@@ -2,6 +2,7 @@
 using E_exam.DTOs.ExamDTOs;
 using E_exam.Models;
 using E_exam.UnitOfWorks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_exam.Controllers
@@ -18,6 +19,7 @@ namespace E_exam.Controllers
             Mapper = mapper;
         }
         [HttpGet("count")]
+        [Authorize(Roles = "admin")]
         public IActionResult ExamCount()
         {
             int count = Unit.ExamRepo.Count();
@@ -25,12 +27,14 @@ namespace E_exam.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "student,admin")]
         public IActionResult getExams()
         {
             var exams = Unit.ExamRepo.GetAll();
             return Ok(Mapper.Map<List<ExamListDTO>>(exams));
         }
         [HttpGet("{id}")]
+        [Authorize(Roles = "admin")]
         public IActionResult getExam(int id)
         {
             var exam = Unit.ExamRepo.GetByIdWithQuestionsAndOptions(id);
@@ -38,6 +42,18 @@ namespace E_exam.Controllers
                 return NotFound();
             return Ok(Mapper.Map<ExamDisplayDTO>(exam));
         }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet("GetForEdit/{id}")]
+        public IActionResult GetForEdit(int id)
+        {
+            var exam = Unit.ExamRepo.GetByIdWithQuestionsAndOptions(id);
+            if (exam == null)
+                return NotFound();
+            return Ok(Mapper.Map<ExamFormDTO>(exam));
+        }
+
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public IActionResult Add(ExamFormDTO examFromReq)
         {
@@ -51,6 +67,8 @@ namespace E_exam.Controllers
             Unit.Save();
             return Ok(new { message = "Exam Added Successfully." });
         }
+
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public IActionResult Edit(int id, ExamFormDTO examFromReq)
         {
@@ -71,7 +89,7 @@ namespace E_exam.Controllers
                 // Get new questions to add it
                 var questionsToAdd = examFromReq.ExamQuestions.Except(currentQuestions).ToList();
                 // Get old questions that are not in examFromReq to remove it
-                 var questionsToRemove = currentQuestions.Except(examFromReq.ExamQuestions).ToList();
+                var questionsToRemove = currentQuestions.Except(examFromReq.ExamQuestions).ToList();
                 // Add new questions
                 if (questionsToAdd.Any())
                 {
@@ -86,6 +104,8 @@ namespace E_exam.Controllers
             Unit.Save();
             return Ok(new { message = "Exam Updateed Successfully." });
         }
+
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public IActionResult TogglePublish(int id)
         {
