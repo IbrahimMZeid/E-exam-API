@@ -5,6 +5,7 @@ using E_exam.DTOs.QuestionDTOs;
 using E_exam.DTOs.StudentExamDTO;
 using E_exam.Models;
 using E_exam.UnitOfWorks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,13 +23,14 @@ namespace E_exam.Controllers
             this.mapper = mapper;
         }
 
+        [Authorize(Roles = "student")]
         [HttpGet("exams")]
         public IActionResult GetAllAvailableExams()
         {
             return Ok(mapper.Map<List<ExamListDTO>>(unit.ExamRepo.GetAll()));
         }
 
-
+        [Authorize(Roles = "student")]
         [HttpGet("{id}/TakenExams")]
         public IActionResult GetAllTakenExams(int id)
         {
@@ -42,7 +44,7 @@ namespace E_exam.Controllers
             return Ok(result);
         }
 
-
+        [Authorize(Roles = "student")]
         [HttpGet("{studentId}/exams/{examId}")]
         public IActionResult GetSpecificExamDetailsForStudent(int studentId, int examId)
         {
@@ -64,7 +66,7 @@ namespace E_exam.Controllers
             };
             return Ok(dto);
         }
-
+        [Authorize(Roles = "student")]
         [HttpGet("exam/{id}/questions")]
         public IActionResult GetExamQuestions(int id)
         {
@@ -100,7 +102,7 @@ namespace E_exam.Controllers
 
             return Ok(result);
         }
-
+        [Authorize(Roles = "student")]
         [HttpPost("{studentId}/exams/{examId}/submit")]
         public IActionResult SubmitExam(int studentId, int examId, [FromBody] ExamSubmissionDTO submission)
         {
@@ -146,6 +148,8 @@ namespace E_exam.Controllers
                     SelectedOptionId = optionId,
                     IsCorrect = isCorrect,
                     Mark = mark,
+                    QuestionId = option.Question.Id
+
                 });
             }
 
@@ -182,11 +186,43 @@ namespace E_exam.Controllers
             {
                 Message = "Exam submitted successfully.",
                 TotalMark = totalMark,
-                Passed = passed
+                Passed = passed,
+                answers = studentAnswersList.Select(studentAnswersList => new
+                {
+                    studentAnswersList.StudentId,
+                    studentAnswersList.ExamId,
+                    studentAnswersList.SelectedOptionId,
+                    studentAnswersList.IsCorrect,
+                    studentAnswersList.Mark,
+                    QuestionId = studentAnswersList.QuestionId
+                }).ToList()
             });
         }
 
-
+        // create endpoint that take examId and studentId and return student answers for that exam
+        [Authorize(Roles = "student")]
+        [HttpGet("{studentId}/exams/{examId}/answers")]
+        public IActionResult GetStudentAnswers(int studentId, int examId)
+        {
+            var studentAnswers = unit.StudentAnswerRepo.GetByStudentIdAndExamId(studentId, examId);
+            if (studentAnswers == null || !studentAnswers.Any())
+            {
+                return NotFound("No answers found for this exam.");
+            }
+            var result = studentAnswers.Select(sa => new
+            {
+                sa.StudentId,
+                sa.ExamId,
+                sa.SelectedOptionId,
+                sa.IsCorrect,
+                sa.Mark,
+                QuestionId = sa.QuestionId,
+                QuestionTitle = sa.Question.Title,
+                SelectedOptionTitle = sa.Question.Options.FirstOrDefault( o => o.Id == sa.SelectedOptionId)?.Title,
+                CorrectAnswer = sa.Question.Options.FirstOrDefault( o => o.IsCorrect == true).Title
+            }).ToList();
+            return Ok(result);
+        }
 
     }
 }

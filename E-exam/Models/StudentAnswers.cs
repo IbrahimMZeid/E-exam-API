@@ -19,5 +19,7 @@ namespace E_exam.Models
 
         public bool IsCorrect { get; set; }
         public int Mark { get; set; }
+        public Question Question { get; set; } = null!;
+        public int? QuestionId { get; set; }
     }
 }
