@@ -108,18 +108,7 @@ namespace E_exam.Controllers
             Mapper.Map(dto, question);
             UnitOfWork.QuestionRepo.Edit(question);
 
-            foreach (var optionDto in dto.Options)
-            {
-                var newOption = new Option
-                {
-                    Title = optionDto.Title,
-                    IsCorrect = optionDto.IsCorrect,
-                    //Mark = optionDto.Mark,
-                    QuestionId = question.Id
-                };
-                UnitOfWork.OptionRepo.Add(newOption);
-            }
-
+          
             UnitOfWork.Save();
 
             return Ok(new { message = "Question updated successfully." });
@@ -135,7 +124,7 @@ namespace E_exam.Controllers
                 return NotFound(new { message = "Question not found." });
 
             UnitOfWork.QuestionRepo.Delete(id);
-            UnitOfWork.QuestionRepo.Db.SaveChanges();
+            UnitOfWork.Save();
 
             return Ok(new { message = "Question deleted successfully." });
         }
